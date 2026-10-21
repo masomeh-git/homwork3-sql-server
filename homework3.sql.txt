@@ -1,0 +1,115 @@
+-- =============================================
+-- مرحله اول: ساخت دیتابیس‌ها
+-- =============================================
+CREATE DATABASE DB1;
+GO
+CREATE DATABASE DB2;
+GO
+
+-- =============================================
+-- مرحله دوم: ساخت جداول در DB1
+-- =============================================
+USE DB1;
+GO
+
+-- جدول دانشجو
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    BirthDate DATE
+);
+
+-- جدول استاد
+CREATE TABLE Teacher (
+    TeacherID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    Specialization NVARCHAR(100)
+);
+
+-- جدول درس
+CREATE TABLE Course (
+    CourseID INT PRIMARY KEY,
+    CourseName NVARCHAR(100),
+    Credits INT
+);
+GO
+
+-- =============================================
+-- ساخت جداول در DB2 (با ساختار مشابه)
+-- =============================================
+USE DB2;
+GO
+
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    BirthDate DATE
+);
+
+CREATE TABLE Teacher (
+    TeacherID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    Specialization NVARCHAR(100)
+);
+
+CREATE TABLE Course (
+    CourseID INT PRIMARY KEY,
+    CourseName NVARCHAR(100),
+    Credits INT
+);
+GO
+
+-- =============================================
+-- مرحله سوم: وارد کردن اطلاعات نمونه (Insert)
+-- =============================================
+-- داده‌های دیتابیس اول
+USE DB1;
+GO
+INSERT INTO Student VALUES (1, N'علی', N'احمدی', '2000-01-01');
+INSERT INTO Teacher VALUES (1, N'دکتر', N'رضایی', N'برنامه‌نویسی');
+INSERT INTO Course VALUES (1, N'SQL Server', 3);
+GO
+
+-- داده‌های دیتابیس دوم
+USE DB2;
+GO
+INSERT INTO Student VALUES (2, N'سارا', N'مرادی', '2002-05-10');
+INSERT INTO Teacher VALUES (2, N'دکتر', N'کریستی', N'هوش مصنوعی');
+INSERT INTO Course VALUES (2, N'Python', 4);
+GO
+
+-- =============================================
+-- مرحله چهارم: کار با دستور UNION برای ترکیب نتایج دو دیتابیس
+-- =============================================
+USE DB1;
+GO
+
+-- ترکیب نام دانشجوها از هر دو دیتابیس
+SELECT FirstName, LastName, 'Student' AS Type FROM DB1.dbo.Student
+UNION
+SELECT FirstName, LastName, 'Student' AS Type FROM DB2.dbo.Student;
+
+-- ترکیب نام استادها از هر دو دیتابیس
+SELECT FirstName, LastName, 'Teacher' AS Type FROM DB1.dbo.Teacher
+UNION
+SELECT FirstName, LastName, 'Teacher' AS Type FROM DB2.dbo.Teacher;
+GO
+
+-- =============================================
+-- مرحله پنجم: ساخت یک VIEW
+-- =============================================
+USE DB1;
+GO
+
+CREATE VIEW vw_StudentList AS
+SELECT StudentID, FirstName, LastName
+FROM Student;
+GO
+
+-- تست کردن ویو
+SELECT * FROM vw_StudentList;
+GO
